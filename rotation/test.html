@@ -39,6 +39,17 @@
 <input type="range" min="0" max="8" value="0" />
 
 
+<div id="_mcePaste">
+
+  <div id="box" style="height:225px;width:225px;background:red;position:absolute"></div>
+
+  <div>ontouchmove="touchMove(event)"</div>
+
+  <div>ontouchstart="touchStart(event)"</div>
+
+</div>
+
+
 	
 	</article>
 	<footer>	
@@ -57,6 +68,23 @@ $('input[type=range]').change(function() {
 	
 	$imgs.hide().filter(':eq('+val+')').show()
 });
+
+function touchStart( e ) {
+ var box = document.getElementById("box");
+ box.style.background = "green";
+ e.preventDefault();
+ return false;
+}
+
+function touchMove( e ) {
+ var targetEvent = e.touches.item(0);
+ var box = document.getElementById("box");
+ box.style.background = "yellow";
+ box.style.left = targetEvent.clientX + "px";
+ box.style.top= targetEvent.clientY + "px";
+ e.preventDefault();
+ return false;
+}
 
 
 </script>
