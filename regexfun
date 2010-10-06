@@ -1,0 +1,3 @@
+/^t(able|d|h)$/i.test(elem.nodeName)
+
+\wZa(ck|ch|c|k)
