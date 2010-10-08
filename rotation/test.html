@@ -13,6 +13,10 @@
 <style>
 	#rotate { position: relative; width: 400px; height: 536px; }
 	#rotate img { position: absolute; }
+	nav { position: relative; }
+	nav #mark { height: 100px; width:100px; background: white; opacity: 0.9; position: absolute; } 
+	.nav li { float: left; width: 100px; height: 100px; border: solid 1px red; background: yellow; }
+	.nav li.on { background: green; }
 </style>
 
 
@@ -23,7 +27,6 @@
 	</header>
 	<article role="main">
 		<h1>3D Rotation</h1>
-
 <div id="rotate">
 	<img src="img/cup1.jpg" />
 	<img src="img/cup2.jpg" />
@@ -36,20 +39,38 @@
 	<img src="img/cup9.jpg" />	
 </div>
 
+
+<!--
 <input type="range" min="0" max="8" value="0" />
-
-
-<div id="_mcePaste">
-
-  <div id="box" style="height:225px;width:225px;background:red;position:absolute"></div>
-
-  <div>ontouchmove="touchMove(event)"</div>
-
-  <div>ontouchstart="touchStart(event)"</div>
-
+<div id="log">
+log
 </div>
 
+<nav>
+<ul class="nav">
+<li>1</li>
+<li>2</li>
+<li>3</li>
+<li>4</li>
+<li>5</li>
+<li>6</li>
+<li>7</li>
+</ul>
+<div id="mark"></div>
+</nav>
+<br /><br /><br /><br /><br /><br /><br />
+<div id="_mcePaste">
+  <div id="box" style="height:225px;width:225px;background:red"></div>
 
+
+</div>
+-->
+<div id="wipe" style="width:600px;height:100px;border:1px solid black;">
+  
+swipe me
+
+</div>
+<div id="wipelog"></div>
 	
 	</article>
 	<footer>	
@@ -58,8 +79,9 @@
 <script>!window.jQuery && document.write('<script src="js/jquery.js?v=1.4.2"><\/script>')</script>
 <script src="js/plugins.js?v=1"></script>
 <script src="js/script.js?v=1"></script>
-
+<script src="js/jquery.touchwipe.min.js?v=1"></script>
 <script>
+/*
 var $imgs = $('img','#rotate');
 $imgs.not(':first-child').hide()
 $('input[type=range]').change(function() {
@@ -68,23 +90,82 @@ $('input[type=range]').change(function() {
 	
 	$imgs.hide().filter(':eq('+val+')').show()
 });
+*/
+
+
+
+var rotate = function(dir) {
+
+	var $imgs = $('#rotate img'),
+		total = $imgs.length,
+		visibleIndex = $imgs.filter(':visible');
+	
+//var val = 
+	$imgs.hide().filter(':eq('+val+')').show()
+
+		
+
+
+}
+
+var log = document.getElementById('wipelog');
+
+$("#wipe").touchwipe({
+     wipeLeft: function(e) { log.innerHTML += "swiping left" },
+     wipeRight: function(e) { log.innerHTML += "swiping right" },
+     min_move_x: 20,
+     preventDefaultEvents: true
+});
+
+//var box = document.getElementById("box");
 
 function touchStart( e ) {
- var box = document.getElementById("box");
+ var targetEvent = e.touches.item(0);
  box.style.background = "green";
+ log.innerHTML = targetEvent.clientX + ' : ' + targetEvent.clientY + '<br>';
  e.preventDefault();
  return false;
 }
 
 function touchMove( e ) {
  var targetEvent = e.touches.item(0);
- var box = document.getElementById("box");
  box.style.background = "yellow";
- box.style.left = targetEvent.clientX + "px";
- box.style.top= targetEvent.clientY + "px";
+ log.innerHTML = targetEvent.clientX + ' : ' + targetEvent.clientY + '<br>';
+ //box.style.left = targetEvent.clientX + "px";
+ //box.style.top= targetEvent.clientY + "px";
  e.preventDefault();
  return false;
 }
+/*
+//box.ontouchmove=touchMove;
+box.ontouchstart=function(e) {
+	if(e.touches.length == 1){ // Only deal with one finger
+		var touch = e.touches[0]; // Get the information for finger #1
+    var node = touch.target; // Find the node the drag started from
+    //touch.pageX + "px"
+    
+	 log.innerHTML = 'dims ' + touch.pageX + ' : ' + touch.pageY + '<br>';
+	}
+}//touchStart;
+
+var $navItems = $('nav'),
+	$mark = $('#mark');
+$navItems.bind('touchstart',function(e){
+	if(e.originalEvent.touches.length == 1) {
+		 $(this).addClass('on');
+	}
+})
+$navItems.bind('touchmove',function(e){
+	if(e.originalEvent.touches.length == 1) {
+		var touch = e.originalEvent.touches[0];
+		log.innerHTML = touch.pageX + 'px';
+		$mark.css( 'left', touch.pageX + 'px' );
+	}
+})
+
+*/
+
+
 
 
 </script>
