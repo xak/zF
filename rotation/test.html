@@ -28,15 +28,19 @@
 	<article role="main">
 		<h1>3D Rotation</h1>
 <div id="rotate">
+<!--	
 	<img src="img/cup1.jpg" />
 	<img src="img/cup2.jpg" />
-	<img src="img/cup3.jpg" />
-	<img src="img/cup4.jpg" />
-	<img src="img/cup5.jpg" />
-	<img src="img/cup6.jpg" />
-	<img src="img/cup7.jpg" />
-	<img src="img/cup8.jpg" />
+-->
 	<img src="img/cup9.jpg" />	
+	<img src="img/cup8.jpg" />	
+	<img src="img/cup7.jpg" />	
+	<img src="img/cup6.jpg" />	
+	<img src="img/cup5.jpg" />	
+	<img src="img/cup4.jpg" />
+	<img src="img/cup3.jpg" />
+
+
 </div>
 
 
@@ -65,12 +69,14 @@ log
 
 </div>
 -->
-<div id="wipe" style="width:600px;height:100px;border:1px solid black;">
+<div id="wipe" style="width:400px;height:100px;border:1px solid black;">
   
 swipe me
 
 </div>
-<div id="wipelog"></div>
+<div id="wipelog" style="position: absolute; right:0; top: 0;width: 300px;"></div>
+	<button onclick="rotate('right');">rotate right</button>
+	<button onclick="rotate('left');">rotate left</button>
 	
 	</article>
 	<footer>	
@@ -80,6 +86,7 @@ swipe me
 <script src="js/plugins.js?v=1"></script>
 <script src="js/script.js?v=1"></script>
 <script src="js/jquery.touchwipe.min.js?v=1"></script>
+<script src="js/jquery.cycle.lite.min.js?v=1"></script>
 <script>
 /*
 var $imgs = $('img','#rotate');
@@ -93,61 +100,95 @@ $('input[type=range]').change(function() {
 */
 
 
+var i = 1,
+	logEl = document.getElementById('wipelog'),
+	ilog = function(str) {
+		logEl.innerHTML += '#' + i +': ' + str + '<br />';
+		i++
+	};
+
+
+var $imgs = $('#rotate img');
+	total = $imgs.length;
+$imgs.not(':first-child').hide(),
 
 var rotate = function(dir) {
-
-	var $imgs = $('#rotate img'),
-		total = $imgs.length,
-		visibleIndex = $imgs.filter(':visible');
-	
-//var val = 
-	$imgs.hide().filter(':eq('+val+')').show()
-
-		
-
-
+	var $currentImg = $imgs.filter(':visible'),
+		currentIndex = $imgs.index($currentImg),
+		targetIndex = dir === 'right' ? currentIndex + 1 : currentIndex - 1;
+	//adjust for first and last
+	if(targetIndex < 0) {
+		targetIndex = total - 1;
+	} else if(targetIndex + 1 >= total) {
+		targetIndex = 0;
+	}
+//log('direction: ' + dir + ' | visible: ' + currentIndex + ' | target: ' + targetIndex);
+	$imgs.hide().filter(':eq('+targetIndex+')').show()
 }
 
-var log = document.getElementById('wipelog');
+/*
+  $('#rotate').cycle({
+		fx: 'none' // choose your transition type, ex: fade, scrollUp, shuffle, etc...
+		,timeout: 1
+		,speed: 1
 
+	});
 $("#wipe").touchwipe({
      wipeLeft: function(e) { log.innerHTML += "swiping left" },
      wipeRight: function(e) { log.innerHTML += "swiping right" },
      min_move_x: 20,
-     preventDefaultEvents: true
+     preventDefaultEvents: false
 });
+*/
+	
+	
 
-//var box = document.getElementById("box");
+
+var box = document.getElementById("wipe"),
+	startX;
 
 function touchStart( e ) {
- var targetEvent = e.touches.item(0);
- box.style.background = "green";
- log.innerHTML = targetEvent.clientX + ' : ' + targetEvent.clientY + '<br>';
- e.preventDefault();
- return false;
+	var targetEvent = e.touches.item(0);
+	startX = targetEvent.clientX
+	ilog('start: ' + targetEvent.clientX);
+	e.preventDefault();
+	return false;
 }
 
 function touchMove( e ) {
- var targetEvent = e.touches.item(0);
- box.style.background = "yellow";
- log.innerHTML = targetEvent.clientX + ' : ' + targetEvent.clientY + '<br>';
- //box.style.left = targetEvent.clientX + "px";
- //box.style.top= targetEvent.clientY + "px";
+	var targetEvent = e.touches.item(0),
+		newX = targetEvent.clientX,
+		dir = newX > startX ? 'right' : 'left';
+	//set new startX value
+	startX = newX;
+
+
+//debug
+box.innerHTML = 'rotating ' + dir;
+ilog(dir + ': ' + targetEvent.clientX);
+
+ rotate(dir)
  e.preventDefault();
  return false;
 }
+
+
+box.ontouchmove=touchMove;
+box.ontouchstart=touchStart;
+
 /*
-//box.ontouchmove=touchMove;
 box.ontouchstart=function(e) {
 	if(e.touches.length == 1){ // Only deal with one finger
 		var touch = e.touches[0]; // Get the information for finger #1
     var node = touch.target; // Find the node the drag started from
     //touch.pageX + "px"
     
-	 log.innerHTML = 'dims ' + touch.pageX + ' : ' + touch.pageY + '<br>';
+	 ilog('coords ' + touch.pageX + ' : ' + touch.pageY);
 	}
-}//touchStart;
-
+}
+*/
+//touchStart;
+/*
 var $navItems = $('nav'),
 	$mark = $('#mark');
 $navItems.bind('touchstart',function(e){
