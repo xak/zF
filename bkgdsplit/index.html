@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US" class="no-js">
+<head>
+	<meta charset="UTF-8" />
+	<title>Bkgd Split</title>
+	<style>
+#lead {  font-family: Helvetica, sans-serif; color: white; background: black; margin: 10px auto; width: 980px; height: 300px; position: relative; overflow: hidden; }
+#lead a { color: black; }
+#lead div a * { position: relative; z-index: 2; }
+#lead div a img { position: absolute; z-index: 1 !important; }
+
+#lead nav a { position: absolute; z-index: 3; bottom: 0;  width: 50px; height: 50px; background: rgba(255,255,255,0.75); right: 0; font-size: 40px; text-align: center; text-decoration: none; color: black; }
+#lead nav a:first-child { left: 0; }
+
+#lead .content { position: relative;  }
+#lead .content a { 
+	position: absolute;
+	width: 980px; height: 667px;
+	/* 
+http://zackweb.s3.amazonaws.com/images/2010/11/bkgd-monuments.png
+http://zackweb.s3.amazonaws.com/images/2010/11/bkgd-logansquare.png
+http://zackweb.s3.amazonaws.com/images/2010/11/uno1.png
+	*/
+	background: url("http://zackweb.s3.amazonaws.com/images/2010/11/bkgd-monuments.png") no-repeat left -100px; 
+	clip: rect(0px, 980px, 250px, 0px);
+}
+#lead .content h1, #lead .content p {
+	background: rgba(255,255,255,0.75);
+	width: 200px;
+	margin: 0;
+	padding: 20px 20px 5px 20px;
+}
+#lead .content p {
+	padding-top: 0;
+	padding-bottom: 20px;
+}
+#lead footer { z-index: 1; width: 980px; height: 50px; position: absolute; bottom: 0; 
+	background: url("http://zackweb.s3.amazonaws.com/images/2010/11/bkgd-monuments.png") no-repeat left -350px;
+}
+
+#xhr { padding: 275px 20px 20px 20px; color: white; background: black; }
+
+	</style>	
+</head>
+<body>
+
+<section id="lead">
+	<div class="content">
+		<a href="#">
+			<!--
+			<img src="http://zackweb.s3.amazonaws.com/images/2010/11/uno1.png" />	
+			-->
+			<h1>Lorem</h1>
+			<p>Curabitur quis dui sit amet elit luctus aliquam.</p>
+		</a>
+	</div>
+	<div id="xhr">
+<p>Pellentesque nibh felis, eleifend id, commodo in, interdum vitae, leo. Praesent eu elit. Ut eu ligula. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Maecenas elementum augue nec nisl. Proin auctor lorem at nibh. Curabitur nulla purus, feugiat id, elementum in, lobortis quis, pede. Vivamus sodales adipiscing sapien. Vestibulum posuere nulla eget wisi. Integer volutpat ligula eget enim. Suspendisse vitae arcu. Quisque pellentesque. Nullam consequat, sem vitae rhoncus tristique, mauris nulla fermentum est, bibendum ullamcorper sapien magna et quam. Sed dapibus vehicula odio. Proin bibendum gravida nisl. Fusce lorem. Phasellus sagittis, nulla in hendrerit laoreet, libero lacus feugiat urna, eget hendrerit pede magna vitae lorem. Praesent mauris.</p>
+	</div>
+	<nav>
+		<a href="#" rel="open">+</a>
+		<a href="#" rel="follow">&gt;</a>
+	</nav>
+	<footer>
+	</footer>
+</section>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+  <script>!window.jQuery && document.write('<script src="http://localhost:8888/wordpress/wp-content/themes/boilerplate/js/jquery.js?v=1.4.2"><\/script>')</script>
+  <script>
+  $('a').bind('click', function(e) { e.preventDefault(); });
+  
+	$('a[rel=open]').bind('click', function(e) {
+		var $t = $(this),
+			$tar = $('#lead'),
+			$xhr = $('#xhr',$tar),
+			$btm = $('footer',$tar);
+			
+			h = $xhr.height() + $tar.height() + $btm.height();
+		if(!$tar.hasClass('open')) {
+			$t.data('h',$tar.height()).html('-');
+			$tar.animate({ 'height': h + 'px' }).addClass('open');
+			return;
+		}
+		$t.html('+')
+		$tar.removeClass('open').animate({'height': $t.data('h') });
+	});
+	
+	//plugin
+	/*
+	needs to know $tar, $xhr, and [$btm]
+	
+	*/
+
+</script>
+
+
+
+
+
+
+</body>
+</html>
