@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html dir=ltr lang=en-US class=no-js>
+<head>
+	<meta charset=UTF-8 />
+	<title>Reveal</title>
+	<style>
+	
+* html { background: url(ie6fixed.gif) fixed; }
+
+
+body { padding: 0; margin: 0; }
+#body {  }
+
+body * { font-family: Helvetica, sans-serif; color: black; }
+
+.vert #viewer { height: 100%; }
+.vert #viewer .panel { float: none; }
+
+/*#viewer { position: absolute; width: 100%; top: 100px; overflow: hidden; }*/
+#test {position: absolute; bottom: 0; }
+
+.panel { 
+	width: 1000px; 
+	height: 800px; 
+
+	/*
+	position: relative; 
+	float: left; 
+	
+	background: -webkit-gradient(linear, left top, left bottom, from(white), to(black)); 
+	margin-left: 20px; 
+	*/
+	background: yellow;
+
+}
+#panel-02 { background: lightblue; }
+
+.illus { position: fixed; left: 100px; top: 100px; width: 400px; height: 300px; background: lightyellow;  z-index: 2; font-size: 9em; overflow: hidden; }
+
+* html .illus {
+    position: absolute;
+    top: expression(eval 
+    (100 + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop)) + 'px');
+    left: expression(eval 
+    (100 + (document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft)) + 'px');
+      	padding-bottom: 0;
+}
+
+* html div#fixme {
+
+position: absolute;
+top:expression(eval(document.compatMode &&
+document.compatMode=='CSS1Compat') ?
+documentElement.scrollTop : document.body.scrollTop);}
+
+
+#illus-02 { background: blue; z-index: 1; }
+
+
+
+	</style>
+</head>
+<body>
+<div id="body">
+<div id=viewer>
+
+<div id=illus-01 class=illus>illus 1</div>
+<div id=illus-02 class=illus>illus 2</div>
+	<div class=panel id=panel-01>
+panel-01
+	</div>
+	<div class=panel id=panel-02>
+panel-02
+	</div>
+	
+	
+
+</div>
+
+
+
+</div>
+
+  <script src=http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js></script>
+  <script src=lib/jquery.scrollTo.js></script>
+  <script src=lib/jquery.serialScroll.js></script>
+  <script src=lib/jquery.easing.js></script>
+
+  
+<script>
+
+$(document).ready(function() {
+	var $illus1 = $('#illus-01'),
+		$illus2 = $('#illus-02'),
+		illheight = $illus1.height(),
+		$panel = $("#panel-02");
+
+	$(window).scroll(function() {
+       var d = $("#panel-02");
+       d.text(Math.floor($(window).scrollTop()));
+    
+       //console.log($panel.offset().top)
+        var st = Math.floor($(window).scrollTop());
+$panel.text(st);
+        
+        var adj = illheight - (st - 400);
+         //console.log(adj)
+//console.log(st + ' ... ' + illheight); 
+if(adj > 300) {
+	$illus2.hide();
+}
+          if(st > 400) {
+          	$illus2.show();
+          	var adj = illheight - (st - 400);
+          	if(adj <= 0) {
+          		$illus1.hide();	
+          	} else {
+          		$illus1.show().height(adj);
+          	}     
+          
+          
+	               
+          }
+
+        
+        
+    });
+});
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+<!--#if expr="$QUERY_STRING = /_escaped_fragment_=([^;]*)/" -->
+	<!--#set var="fragment" value="$1" -->
+	<!--#include file="i/${fragment}.html" -->
+<!--#else -->	
+	<!--#include file="i/home.html" -->
+<!--#endif -->

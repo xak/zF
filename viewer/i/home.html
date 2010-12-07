@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html dir=ltr lang=en-US class=no-js>
+<head>
+	<meta charset=UTF-8 />
+	<title>Viewer</title>
+	<style>
+body { padding: 0; margin: 0; }
+#body {  }
+
+body * { font-family: Helvetica, sans-serif; color: black; }
+
+.vert #viewer { height: 100%; }
+.vert #viewer .panel { float: none; }
+
+#viewer { position: absolute; width: 100%; height: 600px; top: 100px; overflow: hidden; }
+
+
+.panel { 
+	width: 1000px; 
+	height: 600px; 
+	position: relative; 
+	float: left; 
+	/*
+	background: -webkit-gradient(linear, left top, left bottom, from(white), to(black)); 
+	margin-left: 20px; 
+	*/
+	background: yellow;
+
+}
+.panel:nth-child(even) { background: red; }
+
+nav { position: absolute; bottom: 50px; left: 50px; }
+nav button { font-size: 1.2em; padding: 50px; margin: 0; background: green; border: 0; float: left; outline: none; }
+nav button:nth-child(even) { background: blue; }
+#xhrlinks li {
+	float: left;
+	padding: 10px;
+	list-style: none;
+}
+	</style>
+</head>
+<body>
+<div id="body">
+
+<ul id="xhrlinks">
+	<li><a href="#!home">home</a></li>
+	<li><a href="#!panel-01">panel1</a></li>
+	<li><a href="#!panel-02">panel2</a></li>
+	<li><a href="#!panel-03">panel3</a></li>	
+	<li><a href="#!panel-04">panel4</a></li>		
+</ul>
+
+
+<div id=viewer>
+
+
+	<div class=panel>
+		<div id=home>
+	
+<h1>home</h1>
+
+		</div>
+	</div>
+	<div class=panel>
+		<div id=panel-01>
+	
+<h1>1</h1>
+
+		</div>
+	</div>
+	<div class=panel>
+		<div id=panel-02>
+	
+<h1>2</h1>
+
+		</div>
+
+	
+</div>
+<nav>
+	<button id=prev>previous</button>
+	<button id=next>next</button>
+
+</nav>
+
+
+</div>
+
+  <script src=http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js></script>
+  <script src=lib/jquery.scrollTo.js></script>
+  <script src=lib/jquery.serialScroll.js></script>
+  <script src=lib/jquery.easing.js></script>
+
+  
+  <script>
+  
+  var Viewer = function(viewerId,panelClass,scrollVertical) {
+  	var t = this;
+  	
+  	//test
+  	var v=1;
+  	
+  	this.$viewer = $('#'+viewerId);
+  	this.panelClass = panelClass;
+  	this.$panels = $('.'+this.panelClass,this.$viewer);
+  	
+  	//test
+	this.$panels.each(function(i) {
+		//$(this).html('0'+ i);
+	});
+  	
+  	this.isVerticalScroll = scrollVertical || false;
+ 	
+  	this.$scroll; //created and set in init()
+
+  	this.setWidth = function() {
+		//check number of panels against
+		var _$panels = $('.'+t.panelClass,t.$viewer),
+			_w = 0;
+		t.$panels = _$panels;	
+		t.$panels.each(function(i) {
+			var $t = $(this);
+			//add full width
+			_w += $t.width() + parseInt($t.css('margin-left').replace('px','')) + parseInt($t.css('margin-right').replace('px',''));
+
+		$t.html($t.html() + '<br>' + v + ' 0' + i)
+
+		});
+		
+		v++;
+		t.$scroll.width(_w);
+		//console.log(_w)
+  	};
+  	
+  	this.setHeight = function() {
+		//check number of panels against
+		var _$panels = $('.'+t.panelClass,t.$viewer),
+			_h = 0;
+		t.$panels = _$panels;	
+		t.$panels.each(function() {
+			var $t = $(this);
+			//add full width
+			_h += $t.height() + parseInt($t.css('margin-top').replace('px','')) + parseInt($t.css('margin-bottom').replace('px',''));
+		});
+		t.$scroll.height(_h);
+		console.log(_h)
+  	};
+  	
+  	this.init = function() {
+		if(!t.$scroll) {
+			t.$viewer.wrapInner('<div/>');
+			t.$scroll = t.$viewer.children('div').addClass('inner-wrap');
+		}
+		if(scrollVertical) { t.setHeight(t.$scroll); return; } 
+  		t.setWidth(t.$scroll);
+  	};
+  	
+	(function(t) {
+		t.init();
+	})(this)
+
+
+}
+  
+  
+  
+$('nav a').bind('click', function(e) { e.preventDefault(); });
+
+$('a','#xhrlinks').click(function() {
+	var $t = $(this),
+		frag = $t.attr('href').replace('#!',''),
+		$target = $('#'+frag);
+//console.log(frag);
+	if(!$target.length) {
+		$.get('', { '_escaped_fragment_' : frag }, function(data){
+			$target = $('<div class="panel" />').append(data);
+			viewer.$scroll.append($target);
+			//viewer.init();
+			setTimeout(function() {
+				viewer.init();
+				$viewer.trigger('goto',viewer.$panels.index($target));
+			},1000)
+			
+			console.log($target.html())
+		});
+	} else {
+//console.log('loaded already')
+		//viewer.init();
+		$target = $target.parents('.panel');
+		console.log($target.html())
+		$viewer.trigger('goto',viewer.$panels.index($target));
+		//$viewer.trigger('goto',viewer.$panels.index($target.parents('.panel')));
+		
+		
+		
+		//console.log(viewer.$panels.index($target.parents('.panel')))
+	}
+	
+
+});
+
+
+var viewer = new Viewer('viewer','panel'),
+	$viewer = $('#viewer');
+	var dw = $(document).width();
+
+	//$viewer.width($(document).width())
+
+	$viewer.serialScroll({
+		duration: 500,
+		items:'.panel',
+		prev:'#prev',
+		next:'#next',
+		//easing:'easeInQuad',
+		cycle: true,
+		margin: false,
+		lazy:true,
+		//axis:'y',
+		onAfter: function() {
+			//viewer.$scroll.append('<div class="panel" />');
+			viewer.init();
+			//test
+			//viewer.$panels.eq(0).remove();
+		}
+	});
+	
+
+/*
+$viewer.serialScroll({
+	items:'.panel',
+	prev:'#prev',
+	next:'#next',
+	onAfter: function() {
+		viewer.$scroll.append('<div class="panel" />');
+		
+	//$viewer.serialScroll.items = '.panel';
+	}
+});
+*/
+/*
+$('#home').click(function() {
+	$viewer.trigger('goto',0)//serialScroll()
+
+});
+ */
+$(window).bind('mousewheel',function() {
+	
+	//console.log($('#test').offset().top)
+
+})
+
+
+</script>
+</body>
+</html>

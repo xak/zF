@@ -1,0 +1,18 @@
+
+<!-- 
+http://example.com/?_escaped_fragment_=foo 
+-->
+
+
+<!--#if expr="$QUERY_STRING" -->
+	has query
+	
+<!--#else -->
+	no query
+<!--#endif -->
+
+<!--#if expr="$QUERY_STRING = /_escaped_fragment_=([^;]*)/" -->
+<!--#set var="fragment" value="$1" -->
+<!--#endif -->
+
+<!--#echo var="fragment" -->
