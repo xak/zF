@@ -26,7 +26,7 @@ var _ns = 'z';
 		//paths
 		this.filePath = (function() {
 			/* TODO: this should be more fool-proof without a hard-coded reference (RegEx it) */
-			var path = $('link[href*=_files/]').eq(0).attr('href');
+			var path = $('link[href*=css/]').eq(0).attr('href');
 			return path.substring(0,path.indexOf('css'));
 		})();
 		this.basePath = this.filePath.replace('_files/','');
