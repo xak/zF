@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8">
+	<!--[if IE]><![endif]-->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title></title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
+	<link rel="stylesheet" href="css/style.css?v=1">
+	<link rel="stylesheet" media="handheld" href="css/handheld.css?v=1">
+<style>
+body {  }
+#body { position: absolute; height: 100%; width: 100%; background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#b2b2b2)); }
+#one { width: 868px; height: 416px; margin-top: 100px; margin-left: 100px; }
+
+
+.row span { display: none; width: 14px; height: 26px; float: left; background: gray; }
+
+
+.row-1 span { background: url(cell_row1.png) no-repeat; }
+.row-2 span { background: url(cell_row2.png) no-repeat; }
+.row-3 span { background: url(cell_row3.png) no-repeat; }
+.row-4 span { background: url(cell_row4.png) no-repeat; }
+.row-5 span { background: url(cell_row5.png) no-repeat; }
+.row-6 span { background: url(cell_row6.png) no-repeat; }
+.row-7 span { background: url(cell_row7.png) no-repeat; }
+.row-8 span { background: url(cell_row8.png) no-repeat; }
+.row-9 span { background: url(cell_row9.png) no-repeat; }
+.row-10 span { background: url(cell_row10.png) no-repeat; }
+.row-11 span { background: url(cell_row11.png) no-repeat; }
+.row-12 span { background: url(cell_row12.png) no-repeat; }
+.row-13 span { background: url(cell_row16.png) no-repeat; }
+.row-14 span { background: url(cell_row16.png) no-repeat; }
+.row-15 span { background: url(cell_row16.png) no-repeat; }
+.row-16 span { background: url(cell_row16.png) no-repeat; }
+</style>
+
+
+</head>
+<body id="PAGE_ID" class="SECTION_ID TEMPLATE_ID">
+<div id="body">
+	<header>
+	</header>
+	<article role="main">
+
+
+<button>10</button>
+<button>50</button>
+<button>100</button>
+<button>200</button>
+<button>250</button>
+<button>450</button>
+<button>992</button>
+ <!-- -->
+
+
+<div id="one" class="clearfix">
+
+
+
+</div>
+
+
+	</article>
+	<footer>	
+	</footer>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script>!window.jQuery && document.write('<script src="js/jquery.js?v=1.4.2"><\/script>')</script>
+<script src="js/plugins.js?v=1"></script>
+<script src="js/script.js?v=1"></script>
+<script>
+
+var els = '';
+for(var i=0;i<992;i++) {
+	els += '<div></div>';
+}
+
+
+function buildCellsHTML(numAcross,numDown) {
+	var html = '',
+		total = numAcross*numDown,
+		row = 1;
+	for(var i=0;i<total;i++) {
+		var count = i+1,
+			openRow = count===1 || (count-1)/(row-1)===numAcross,
+			closeRow = count===total || (count)/row===numAcross;
+		if(openRow) { 
+			html += '<div class="row clearfix row-'+(row)+'">';
+		}
+		html += '<span></span>';
+		if(closeRow) { 
+			html += '</div>';
+			row++;
+		}
+	}
+	return html;
+}
+
+
+$('#one').html(buildCellsHTML(62,16));
+
+//try doing each row simultaneously
+//ease it
+var numshown;
+function showBoxes(num) {
+	var i = 0,
+		$els = $('span','#one');
+		
+	if(num > numshown) {
+		i = numshown;
+	} 	
+	(function(delay,count) {
+		setTimeout(function() {
+			if (count && i+1 > count) return;
+				var $el = $($els[i++]);
+				$el.show()
+				
+				
+				setTimeout(arguments.callee, delay);
+		}, delay);
+	})(1,num);
+	numshown = num;
+}
+
+$('button').click(function() {
+	showBoxes(parseInt($(this).html()))
+
+});
+/*			
+
+		(function(delay, count) {
+			var flyOut = dir === 'out';
+			setTimeout(function() {
+				if (count && i+1 > count) return;
+					var $el = $($els[i++]);
+					flyOut ? $el.addClass('pullup') : $el.removeClass('pullup');
+					if(flyOut && !keepOff) {
+						//do shift after last one
+						if (i===count) {
+							listenerEl = $el[0];
+							listenerEl.addEventListener('webkitTransitionEnd',shiftToFront,false);	
+						}	
+					}					
+					setTimeout(arguments.callee, delay);
+			}, delay);
+		})(100,$els.length,keepOff);
+			
+*/
+
+
+</script>
+</body>
+</html>
